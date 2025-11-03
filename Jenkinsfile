@@ -1,58 +1,45 @@
 pipeline {
   agent any
 
-  environment {
-    NODE_ENV = "test"
+  tools {
+    nodejs "NodeJS_20"
   }
 
   stages {
     stage('Checkout') {
       steps {
-        echo '📥 Pulling code from GitHub...'
-        checkout scm
+        git branch: 'main', url: 'https://github.com/<your-username>/jenkins-nodejs-demo.git'
       }
     }
 
     stage('Install Dependencies') {
       steps {
-        echo '📦 Installing npm packages...'
         sh 'npm install'
       }
     }
 
     stage('Run Tests') {
       steps {
-        echo '🧪 Running Jest tests...'
-        sh 'npx jest --ci --reporters=default --reporters=jest-junit'
-      }
-      post {
-        always {
-          junit 'junit.xml'
-        }
+        sh 'npm test'
       }
     }
 
-    stage('Build') {
+    stage('Build Complete') {
       steps {
-        echo '🔧 Building Node.js app...'
-        sh 'echo "Build step placeholder (optional)"'
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        echo '🚀 Deploying application...'
-        sh 'pm2 restart index.js || pm2 start index.js'
+        echo '✅ Build and test stages completed successfully!'
       }
     }
   }
 
   post {
+    always {
+      echo 'Pipeline finished.'
+    }
     success {
-      echo '🎉 Build and deploy successful!'
+      echo 'All tests passed!'
     }
     failure {
-      echo '❌ Build failed. Check logs.'
+      echo 'Something went wrong 😢'
     }
   }
 }
