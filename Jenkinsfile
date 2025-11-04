@@ -20,7 +20,7 @@ pipeline {
 
     stage('Run Tests') {
       steps {
-        sh 'npm test'
+        sh 'npx jest --runInBand --detectOpenHandles'
       }
     }
 
