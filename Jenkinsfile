@@ -18,6 +18,12 @@ pipeline {
       }
     }
 
+    stage('Fix Permissions') {
+      steps {
+        sh 'chmod +x node_modules/.bin/jest || true'
+      }
+    }
+
     stage('Run Tests') {
       steps {
         sh 'npx jest --runInBand --detectOpenHandles'
